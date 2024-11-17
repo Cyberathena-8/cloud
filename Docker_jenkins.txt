@@ -1,0 +1,35 @@
+For a **Jenkins Freestyle Project**, you can use **Jenkins credentials** to securely handle your Docker login. Here’s how you can set it up:
+
+### Step 1: Add Docker Credentials in Jenkins
+1. Go to Jenkins' **Manage Jenkins** → **Manage Credentials**.
+2. Choose the appropriate **domain** (or use the global domain if unsure).
+3. Click **(global)** → **Add Credentials**.
+4. Choose **Username with password**.
+   - **Username**: Enter your Docker username (e.g., `cyberathena`).
+   - **Password**: Enter your Docker password.
+   - **ID**: Give it a recognizable ID (e.g., `docker-credentials`).
+   - **Description**: Optionally, add a description.
+
+### Step 2: Use the Credentials in Your Freestyle Job
+1. Go to your **Freestyle Project**.
+2. In the **Build** section, add a **Build Step**.
+3. Choose **Execute shell** (or **Execute Windows batch command** depending on your environment).
+4. Inside the shell step, use the following command to login to Docker using Jenkins credentials:
+
+   ```bash
+   # Login to Docker using Jenkins credentials
+   echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+   ```
+
+5. Now, configure Jenkins to inject your credentials into the environment variables:
+
+   - Scroll down to the **Build Environment** section.
+   - Check the box for **Use secret text(s) or file(s)**.
+   - Click **Add** → **Username and password (separated)**.
+   - Select your credentials (the ones you added earlier) from the **Credentials** drop-down menu.
+   - Set the **Username Variable** to `DOCKER_USERNAME` and the **Password Variable** to `DOCKER_PASSWORD`.
+
+### Step 3: Build and Test
+- Now, when you run the Jenkins job, it will automatically login to Docker with your credentials without exposing your password in the logs.
+
+Let me know if you run into any issues or need more details!
